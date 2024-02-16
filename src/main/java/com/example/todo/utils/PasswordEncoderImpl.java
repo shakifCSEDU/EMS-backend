@@ -3,12 +3,18 @@ package com.example.todo.utils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.Date;
+
 public class PasswordEncoderImpl {
     public static void main(String[] args) {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-        System.out.println(passwordEncoder.encode("shakif"));
-        System.out.println(passwordEncoder.encode("admin"));
+        //System.out.println(passwordEncoder.encode("shakif"));
+        //System.out.println(passwordEncoder.encode("admin"));
+        Date currentDate = new Date();
+        Date expireDate = new Date(currentDate.getTime());
+
+
     }
 }
 //$2a$10$LVNhwQ2CJYd.8fW4Zif6yOX2qqgyET/WLPC8qo/jBlpb.xopcf9qO
