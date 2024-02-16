@@ -6,20 +6,24 @@ import com.example.todo.security.JwtAuthenticationFilter;
 public class JwtAuthResponse {
     private String accessToken;
     private String tokenType = "Bearer";
-    private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-    private JwtAuthenticationFilter authenticationFilter;
+    private String role;
 
     public JwtAuthResponse() {
     }
 
-    public JwtAuthResponse(String accessToken, String tokenType, JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint, JwtAuthenticationFilter authenticationFilter) {
+    public JwtAuthResponse(String accessToken, String tokenType, String role) {
         this.accessToken = accessToken;
         this.tokenType = tokenType;
-        this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
-        this.authenticationFilter = authenticationFilter;
+        this.role = role;
     }
 
+    public String getRole() {
+        return role;
+    }
 
+    public void setRole(String role) {
+        this.role = role;
+    }
 
     public String getAccessToken() {
         return accessToken;
