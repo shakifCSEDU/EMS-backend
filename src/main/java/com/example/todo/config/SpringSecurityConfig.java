@@ -41,28 +41,12 @@ public class SpringSecurityConfig {
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
-//       http.csrf(AbstractHttpConfigurer::disable)
-//               .authorizeHttpRequests((authorize)->{
-//                   authorize.requestMatchers("/api/auth/**").permitAll();
-//                   authorize.anyRequest().authenticated();
-//               }).httpBasic(Customizer.withDefaults());
-//        http.exceptionHandling(exception -> exception
-//                .authenticationEntryPoint(authenticationEntryPoint));
-//        http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
-       // return http.build();
 
         http.csrf((csrf) -> csrf.disable())
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests((authorize) -> {
-//                    authorize.requestMatchers(HttpMethod.POST, "/api/**").hasRole("ADMIN");
-//                    authorize.requestMatchers(HttpMethod.PUT, "/api/**").hasRole("ADMIN");
-//                    authorize.requestMatchers(HttpMethod.DELETE, "/api/**").hasRole("ADMIN");
-//                    authorize.requestMatchers(HttpMethod.GET, "/api/**").hasAnyRole("ADMIN", "USER");
-//                    authorize.requestMatchers(HttpMethod.PATCH, "/api/**").hasAnyRole("ADMIN", "USER");
-//                    authorize.requestMatchers(HttpMethod.GET, "/api/**").permitAll();
                     authorize.requestMatchers("/api/auth/**").permitAll();
-                    authorize.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
                     authorize.anyRequest().authenticated();
                 }).httpBasic(Customizer.withDefaults());
 

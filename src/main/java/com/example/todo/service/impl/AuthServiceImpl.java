@@ -41,25 +41,25 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public String register(RegisterDto registerDto) {
-        // check username is already exists in database
-        if(userRepository.existsByUsername(registerDto.getUsername())){
-            throw new TodoAPIException(HttpStatus.BAD_REQUEST,"Username already exists!");
-        }
+
         // check email is already exists in database
         if(userRepository.existsByEmail(registerDto.getEmail())){
             throw new TodoAPIException(HttpStatus.BAD_REQUEST,"Email is already exists!");
         }
         User user = new User();
-        user.setName(registerDto.getName());
         user.setUsername(registerDto.getUsername());
         user.setEmail(registerDto.getEmail());
+
+        if(!registerDto.getPhone().isEmpty())
+            user.setPhone(registerDto.getPhone());
+
         user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
 
-        Set<Role> roles = new HashSet<>();
-        Role userRole =  roleRepository.findByName("ROLE_USER");
-        roles.add(userRole);
+        //Role userRole =  roleRepository.findByName("ROLE_USER");
+        Role userRole = registerDto.getRole();
+        Role savedRole =  roleRepository.save(userRole);
 
-        user.setRoles(roles);
+        user.setRole(savedRole);
         userRepository.save(user);
         return "User register successfully!";
     }
@@ -73,17 +73,19 @@ public class AuthServiceImpl implements AuthService {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token  = jwtTokenProvider.generateToken(authentication);
+
         Optional<User>userOptional =  userRepository.findByUsernameOrEmail(loginDto.getUsernameOrEmail(), loginDto.getUsernameOrEmail());
 
         String role = null;
 
         if(userOptional.isPresent()){
             User loggedInUser = userOptional.get();
-            Optional<Role>optionalRole =  loggedInUser.getRoles().stream().findFirst();
-            if(optionalRole.isPresent()){
-                Role userRole = optionalRole.get();
-                role = userRole.getName();
-            }
+//            Optional<Role>optionalRole =  loggedInUser.getRoles().stream().findFirst();
+//            if(optionalRole.isPresent()){
+//                Role userRole = optionalRole.get();
+//                role = userRole.getName();
+//            }
+            role = loggedInUser.getRole().getName();
         }
         JwtAuthResponse jwtAuthResponse = new JwtAuthResponse();
         jwtAuthResponse.setRole(role);

@@ -1,24 +1,36 @@
 package com.example.todo.dto;
 
+import com.example.todo.entity.Role;
+
 public class RegisterDto {
-    private String name;
     private String username;
     private String email;
     private String password;
+    private String phone;
+    private Role role;
 
-    public RegisterDto(String name, String username, String email, String password) {
-        this.name = name;
+    public RegisterDto(String username, String email, String password, String phone, Role role) {
         this.username = username;
         this.email = email;
         this.password = password;
+        this.phone = phone;
+        this.role = role;
     }
 
-    public String getName() {
-        return name;
+    public Role getRole() {
+        return role;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String getUsername() {

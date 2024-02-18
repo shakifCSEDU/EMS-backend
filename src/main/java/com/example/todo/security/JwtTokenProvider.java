@@ -24,8 +24,6 @@ public class JwtTokenProvider {
         String username = authentication.getName();
         Date currentDate = new Date();
         Date expireDate = new Date(currentDate.getTime() + jwtExpirationDate);
-
-        System.out.println("Here is SOUT----> "+username+" "+ expireDate.toString());
         String token = Jwts
                 .builder()
                 .setSubject(username)

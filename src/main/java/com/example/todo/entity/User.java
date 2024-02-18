@@ -11,29 +11,55 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
-    @Column(nullable = false,unique = true)
+
+    @Column(nullable = false)
     private String username;
     @Column(nullable = false,unique = true)
     private String email;
+    private String phone;
+
 
     @Column(nullable = false)
     private String password;
+    private Boolean status;
 
-    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
-    @JoinTable(name = "users_roles",
-        joinColumns = @JoinColumn(name = "user_id",referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id",referencedColumnName = "id")
-    )
-    private Set<Role>roles;
 
-    public Set<Role> getRoles() {
-        return roles;
+
+//    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+//    @JoinTable(name = "users_roles",
+//        joinColumns = @JoinColumn(name = "user_id",referencedColumnName = "id"),
+//            inverseJoinColumns = @JoinColumn(name = "role_id",referencedColumnName = "id")
+//    )
+//    private Set<Role>roles;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "role_id",referencedColumnName = "id")
+    private Role role;
+
+    public Role getRole() {
+        return role;
     }
 
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
+    public void setRole(Role role) {
+        this.role = role;
     }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
+    }
+
 
     public Long getId() {
         return id;
@@ -41,14 +67,6 @@ public class User {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getUsername() {
