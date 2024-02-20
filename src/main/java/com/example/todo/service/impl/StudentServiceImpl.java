@@ -40,11 +40,11 @@ public class StudentServiceImpl implements StudentService {
         User savedUser =  userRepository.save(user);
 
         // extract Teacherinfo from Student
-        Teacher teacher = studentDto.getTeacher();
-        Teacher savedTeacher = teacherRepository.save(teacher);
+        // Teacher teacher = studentDto.getTeacher();
+        //Teacher savedTeacher = teacherRepository.save(teacher);
 
         student.setUser(savedUser);
-        student.setTeacher(savedTeacher);
+        student.setTeacher(null);
 
         Student savedStudent = studentRepository.save(student);
 

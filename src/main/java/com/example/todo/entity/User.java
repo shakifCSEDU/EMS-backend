@@ -21,7 +21,8 @@ public class User {
 
     @Column(nullable = false)
     private String password;
-    private Boolean status;
+
+    private Boolean status = Boolean.TRUE;
 
 
 
