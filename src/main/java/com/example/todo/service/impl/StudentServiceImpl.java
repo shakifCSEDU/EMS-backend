@@ -1,14 +1,13 @@
 package com.example.todo.service.impl;
 
 import com.example.todo.dto.StudentDto;
+import com.example.todo.dto.TeacherStudentDto;
 import com.example.todo.dto.TodoDto;
-import com.example.todo.entity.Student;
-import com.example.todo.entity.Teacher;
-import com.example.todo.entity.Todo;
-import com.example.todo.entity.User;
+import com.example.todo.entity.*;
 import com.example.todo.exception.ResourceNotFoundException;
 import com.example.todo.repository.StudentRepository;
 import com.example.todo.repository.TeacherRepository;
+import com.example.todo.repository.TeacherStudentRepository;
 import com.example.todo.repository.UserRepository;
 import com.example.todo.service.StudentService;
 import org.modelmapper.ModelMapper;
@@ -16,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,6 +26,8 @@ public class StudentServiceImpl implements StudentService {
     private UserRepository userRepository;
     @Autowired
     private TeacherRepository teacherRepository;
+    @Autowired
+    private TeacherStudentRepository teacherStudentRepository;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -88,5 +90,26 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public StudentDto inActiveStudent(Long id) {
         return null;
+    }
+
+    @Override
+    public TeacherStudentDto sendRequest(TeacherStudentDto teacherStudentDto) {
+        TeacherStudent teacherStudent = new TeacherStudent();
+
+        Long teacher_id  = teacherStudentDto.getTeacher().getTeacher_id();
+
+        Optional<Teacher> teacher = teacherRepository.findById(teacher_id);
+
+        teacherStudent.setTeacher(teacher.get());
+
+        Long student_id = teacherStudentDto.getStudent().getStudent_id();
+
+        Optional<Student> student =   studentRepository.findById(student_id);
+
+        teacherStudent.setStudent(student.get());
+        teacherStudent.setRequest_status("pending");
+
+        TeacherStudent savedTeacherStudent = teacherStudentRepository.save(teacherStudent);
+        return modelMapper.map(savedTeacherStudent,TeacherStudentDto.class);
     }
 }

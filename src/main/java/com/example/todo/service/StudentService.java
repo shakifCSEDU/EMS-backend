@@ -1,6 +1,7 @@
 package com.example.todo.service;
 
 import com.example.todo.dto.StudentDto;
+import com.example.todo.dto.TeacherStudentDto;
 
 import java.util.List;
 
@@ -12,4 +13,5 @@ public interface StudentService {
     void deleteStudent(Long id);
     StudentDto activeStudent(Long id);
     StudentDto inActiveStudent(Long id);
+    TeacherStudentDto sendRequest(TeacherStudentDto teacherStudentDto);
 }

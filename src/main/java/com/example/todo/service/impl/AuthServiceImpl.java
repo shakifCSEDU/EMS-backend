@@ -129,9 +129,12 @@ public class AuthServiceImpl implements AuthService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token  = jwtTokenProvider.generateToken(authentication);
 
-        Optional<User>userOptional =  userRepository.findByUsernameOrEmail(loginDto.getUsernameOrEmail(), loginDto.getUsernameOrEmail());
+        Optional<User>userOptional =  userRepository.findByUsernameOrEmail(loginDto.getUsernameOrEmail(),
+                loginDto.getUsernameOrEmail());
 
         String role = null;
+        Long id = null;
+        String name = null;
 
         if(userOptional.isPresent()){
             User loggedInUser = userOptional.get();
@@ -141,12 +144,15 @@ public class AuthServiceImpl implements AuthService {
 //                role = userRole.getName();
 //            }
             role = loggedInUser.getRole().getName();
+            name = loggedInUser.getUsername();
+            id = loggedInUser.getId();
+
         }
         JwtAuthResponse jwtAuthResponse = new JwtAuthResponse();
         jwtAuthResponse.setRole(role);
         jwtAuthResponse.setAccessToken(token);
+        jwtAuthResponse.setId(id);
+        jwtAuthResponse.setName(name);
         return jwtAuthResponse;
     }
-
-
 }

@@ -7,14 +7,34 @@ public class JwtAuthResponse {
     private String accessToken;
     private String tokenType = "Bearer";
     private String role;
+    private String name;
+    private Long id;
 
     public JwtAuthResponse() {
     }
 
-    public JwtAuthResponse(String accessToken, String tokenType, String role) {
+    public JwtAuthResponse(String accessToken, String tokenType, String role,String name,Long id) {
         this.accessToken = accessToken;
         this.tokenType = tokenType;
         this.role = role;
+        this.name = name;
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getRole() {

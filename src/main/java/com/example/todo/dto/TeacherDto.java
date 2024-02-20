@@ -8,7 +8,6 @@ public class TeacherDto {
     private Long teacher_id;
     private String faculty_name;
     private String designation;
-
     private User user;
 
     public Long getTeacher_id() {

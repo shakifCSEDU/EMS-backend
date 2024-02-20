@@ -93,7 +93,18 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public List<StudentDto> findStudents(Long teacher_id) {
+    public List<StudentDto> findStudents(Long user_id) {
+        // first track the teacher_id from user_id
+        List<Teacher>teachers =  teacherRepository.findAll();
+        Long teacher_id = null;
+
+        for(Teacher teacher : teachers){
+            if(teacher.getUser().getId() == user_id){
+                teacher_id = teacher.getUser().getId();
+                break;
+            }
+        }
+
         // here first all fetch record from TeacherStudent table by the teacher_id
         List<TeacherStudent> dtos = teacherStudentRepository.findAll();
 

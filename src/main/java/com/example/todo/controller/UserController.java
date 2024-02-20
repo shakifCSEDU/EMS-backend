@@ -47,7 +47,7 @@ public class UserController {
         return ResponseEntity.ok(studentDtos);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN','TEACHER')")
+    @PreAuthorize("hasAnyRole('ADMIN','STUDENT')")
     @GetMapping("/teachers")
     public ResponseEntity<List<TeacherDto>>getAllTeachers(){
         List<TeacherDto>teacherDtos = teacherService.getAllTeachers();
@@ -58,12 +58,22 @@ public class UserController {
 
     // fetch all students based on teacher_id
     @PreAuthorize("hasAnyRole('TEACHER')")
-    @GetMapping("/teachers/{id}/students")
-    public ResponseEntity<List<StudentDto>>getAllAddedStudents(@PathVariable("id") Long teacher_id){
+    @GetMapping("/teacher/{id}/students")
+    public ResponseEntity<List<StudentDto>>getAllAddedStudents(@PathVariable("id") Long user_id){
 
-        List<StudentDto> studentDtos = teacherService.findStudents(teacher_id);
+        List<StudentDto> studentDtos = teacherService.findStudents(user_id);
         return ResponseEntity.ok(studentDtos);
     }
+
+    // student sent a request to any teacher
+    @PreAuthorize("hasAnyRole('STUDENT')")
+    @PostMapping("/student/send-request")
+    public ResponseEntity<TeacherStudentDto>sendTeacheRequest(@RequestBody TeacherStudentDto teacherStudentDto){
+          TeacherStudentDto savedTeacherStudentDto = studentService.sendRequest(teacherStudentDto);
+
+         return ResponseEntity.ok(teacherStudentDto);
+    }
+
 
     // Teacher can delete Request
     @PreAuthorize("hasAnyRole('TEACHER')")
