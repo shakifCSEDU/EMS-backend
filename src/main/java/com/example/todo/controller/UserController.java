@@ -68,11 +68,21 @@ public class UserController {
     // student sent a request to any teacher
     @PreAuthorize("hasAnyRole('STUDENT')")
     @PostMapping("/student/send-request")
-    public ResponseEntity<TeacherStudentDto>sendTeacheRequest(@RequestBody TeacherStudentDto teacherStudentDto){
+    public ResponseEntity<TeacherStudentDto>sendTeacherRequest(@RequestBody TeacherStudentDto teacherStudentDto){
           TeacherStudentDto savedTeacherStudentDto = studentService.sendRequest(teacherStudentDto);
 
          return ResponseEntity.ok(teacherStudentDto);
     }
+    // check student the request status that
+    @PreAuthorize("hasAnyRole('STUDENT')")
+    @GetMapping("/student/check-status/{id}")
+    public ResponseEntity<String>checkStudentStatus(@PathVariable("id") Long student_id){
+        String request_status = studentService.checkStatus(student_id);
+
+        return ResponseEntity.ok(request_status);
+    }
+
+
 
 
     // Teacher can delete Request

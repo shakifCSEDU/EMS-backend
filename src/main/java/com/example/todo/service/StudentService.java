@@ -14,4 +14,5 @@ public interface StudentService {
     StudentDto activeStudent(Long id);
     StudentDto inActiveStudent(Long id);
     TeacherStudentDto sendRequest(TeacherStudentDto teacherStudentDto);
+    String checkStatus(Long student_id);
 }

@@ -112,4 +112,18 @@ public class StudentServiceImpl implements StudentService {
         TeacherStudent savedTeacherStudent = teacherStudentRepository.save(teacherStudent);
         return modelMapper.map(savedTeacherStudent,TeacherStudentDto.class);
     }
+
+    @Override
+    public String checkStatus(Long student_id) {
+        List<TeacherStudent>teacherStudents =  teacherStudentRepository.findAll();
+        String status = null;
+
+        for(TeacherStudent teacherStudent : teacherStudents){
+            if(teacherStudent.getStudent().getStudent_id().equals(student_id)){
+                    status = teacherStudent.getRequest_status();
+                    break;
+            }
+        }
+        return status;
+    }
 }
