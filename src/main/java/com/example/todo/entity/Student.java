@@ -72,4 +72,16 @@ public class Student {
     public void setTeacher(Teacher teacher) {
         this.teacher = teacher;
     }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "student_id=" + student_id +
+                ", department_name='" + department_name + '\'' +
+                ", batch_no='" + batch_no + '\'' +
+                ", user=" + user +
+                ", teacher=" + teacher +
+                ", teacherStudent=" + teacherStudent +
+                '}';
+    }
 }

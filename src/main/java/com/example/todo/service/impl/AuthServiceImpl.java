@@ -23,7 +23,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -135,20 +137,41 @@ public class AuthServiceImpl implements AuthService {
         String role = null;
         Long id = null;
         String name = null;
-
         if(userOptional.isPresent()){
             User loggedInUser = userOptional.get();
-//            Optional<Role>optionalRole =  loggedInUser.getRoles().stream().findFirst();
-//            if(optionalRole.isPresent()){
-//                Role userRole = optionalRole.get();
-//                role = userRole.getName();
-//            }
             role = loggedInUser.getRole().getName();
             name = loggedInUser.getUsername();
             id = loggedInUser.getId();
 
         }
         JwtAuthResponse jwtAuthResponse = new JwtAuthResponse();
+        if(role.equals("ROLE_STUDENT")){
+            List<Student>students = studentRepository.findAll();
+
+            for(Student student : students){
+                User newUser = student.getUser();
+
+               if(newUser.getId().equals(id)){
+                   System.out.println(newUser.getId()+" "+id);
+                   jwtAuthResponse.setStudent_id(student.getStudent_id());
+                    jwtAuthResponse.setDepartment_name(student.getDepartment_name());
+                    jwtAuthResponse.setBatch_no(student.getBatch_no());
+                }
+
+            }
+        }
+        else if(role.equals("ROLE_TEACHER")){
+            List<Teacher>teachers = teacherRepository.findAll();
+            for(Teacher teacher : teachers){
+                if(teacher.getUser().getId().equals(id)){
+                    jwtAuthResponse.setTeacher_id(teacher.getTeacher_id());
+                    jwtAuthResponse.setFaculty_name(teacher.getFaculty_name());
+                    jwtAuthResponse.setDesignation(teacher.getDesignation());
+                }
+            }
+        }
+
+
         jwtAuthResponse.setRole(role);
         jwtAuthResponse.setAccessToken(token);
         jwtAuthResponse.setId(id);
