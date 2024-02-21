@@ -93,31 +93,21 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public List<StudentDto> findStudents(Long user_id) {
-        // first track the teacher_id from user_id
-        List<Teacher>teachers =  teacherRepository.findAll();
-        Long teacher_id = null;
-
-        for(Teacher teacher : teachers){
-            if(teacher.getUser().getId() == user_id){
-                teacher_id = teacher.getUser().getId();
-                break;
-            }
-        }
-
+    public List<StudentDto> findStudents(Long teacher_id) {
         // here first all fetch record from TeacherStudent table by the teacher_id
         List<TeacherStudent> dtos = teacherStudentRepository.findAll();
 
         List<Student>students = new ArrayList<>();
+        List<StudentDto>studentDtos = new ArrayList<>();
 
         for(TeacherStudent teacherStudent:dtos){
             if(teacherStudent.getTeacher().getTeacher_id() == teacher_id){
-                students.add(teacherStudent.getStudent());
+                StudentDto studentDto = modelMapper.map(teacherStudent.getStudent(),StudentDto.class);
+                studentDto.setRequest_status(teacherStudent.getRequest_status());
+                studentDtos.add(studentDto);
             }
         }
-        return  students.stream().map((student)->modelMapper
-                        .map(student,StudentDto.class))
-                .collect(Collectors.toList());
+        return studentDtos;
     }
 
     // In this method teacher remove or delete student

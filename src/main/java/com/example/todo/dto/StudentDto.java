@@ -14,6 +14,15 @@ public class StudentDto {
 
     private User user;
     private Teacher teacher;
+    private String request_status = null;
+
+    public String getRequest_status() {
+        return request_status;
+    }
+
+    public void setRequest_status(String request_status) {
+        this.request_status = request_status;
+    }
 
     public Long getStudent_id() {
         return student_id;
