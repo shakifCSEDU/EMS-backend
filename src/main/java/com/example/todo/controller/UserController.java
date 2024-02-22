@@ -6,6 +6,7 @@ import com.example.todo.dto.TeacherStudentDto;
 import com.example.todo.dto.TodoDto;
 import com.example.todo.service.StudentService;
 import com.example.todo.service.TeacherService;
+import com.example.todo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,9 @@ public class UserController {
     private StudentService studentService;
     @Autowired
     private TeacherService teacherService;
+
+    @Autowired
+    private UserService userService;
 
     // Add Student info to the Student Table
     @PreAuthorize("hasRole('ADMIN')")
@@ -108,6 +112,24 @@ public class UserController {
     public ResponseEntity<String>removeStudent(@RequestBody TeacherStudentDto teacherStudentDto){
         teacherService.deletePendingOrAccepted(teacherStudentDto);
         return ResponseEntity.ok("Remove Successfully!");
+    }
+
+    // Admin activated the user
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/activate-user/{id}")
+    public ResponseEntity<String> activeUser(@PathVariable("id") Long user_id){
+
+        String text = userService.activeUser(user_id);
+        return ResponseEntity.ok(text);
+    }
+
+    // Admin De-activated the user
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/deactivate-user/{id}")
+    public ResponseEntity<String> DeActiveUser(@PathVariable("id") Long user_id){
+       String text = userService.deActiveUser(user_id);
+       return ResponseEntity.ok(text);
+
     }
 }
 

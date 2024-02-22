@@ -22,7 +22,7 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    private Boolean status = Boolean.TRUE;
+    private Boolean status = Boolean.FALSE;
 
 
 

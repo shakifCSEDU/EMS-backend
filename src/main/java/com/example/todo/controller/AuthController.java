@@ -22,14 +22,14 @@ public class AuthController {
     }
     // build Register REST API
 
-    @PreAuthorize("hasRole('ADMIN')")
+
     @PostMapping("/register-student")
     public ResponseEntity<String>registerStudent(@RequestBody StudentDto studentDto){
         String response = authService.registerStudent(studentDto);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+
     @PostMapping("/register-teacher")
     public ResponseEntity<String>registerTeacher(@RequestBody TeacherDto teacherDto){
         String response = authService.registerTeacher(teacherDto);
