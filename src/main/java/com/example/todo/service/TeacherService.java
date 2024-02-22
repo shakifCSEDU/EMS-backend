@@ -11,7 +11,7 @@ public interface TeacherService {
     TeacherDto addTeacher(TeacherDto teacherDto);
     TeacherDto getTeacher(Long id);
     List<TeacherDto> getAllTeachers();
-    TeacherDto updateTeacher(TeacherDto teacherDto,Long id);
+    TeacherDto updateTeacher(TeacherDto teacherDto);
     void deleteTeacher(Long id);
     TeacherDto activeTeacher(Long id);
     TeacherDto inActiveTeacher(Long id);

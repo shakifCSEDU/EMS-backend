@@ -12,7 +12,9 @@ import com.example.todo.repository.UserRepository;
 import com.example.todo.service.StudentService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +30,8 @@ public class StudentServiceImpl implements StudentService {
     private TeacherRepository teacherRepository;
     @Autowired
     private TeacherStudentRepository teacherStudentRepository;
-
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     @Autowired
     private ModelMapper modelMapper;
 
@@ -68,11 +71,6 @@ public class StudentServiceImpl implements StudentService {
 
         return students.stream().map((student)->modelMapper.map(student,StudentDto.class))
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public StudentDto updateStudent(StudentDto studentDto, Long id) {
-        return null;
     }
 
     @Override
@@ -126,4 +124,31 @@ public class StudentServiceImpl implements StudentService {
         }
         return status;
     }
+
+    @Override
+    public StudentDto updateStudent(StudentDto studentDto) {
+        List<Student>students = studentRepository.findAll();
+        Student trackStudent = new Student();
+
+        for(Student student : students){
+            if(student.getStudent_id() == studentDto.getStudent_id()){
+                trackStudent = student;
+                break;
+            }
+        }
+        trackStudent.getUser().setEmail(studentDto.getUser().getEmail());
+
+        // check the password field is empty or not
+        if(StringUtils.hasLength(studentDto.getUser().getPassword()))
+            trackStudent.getUser().setPassword(passwordEncoder.encode(studentDto.getUser().getPassword()));
+
+
+        trackStudent.getUser().setUsername(studentDto.getUser().getUsername());
+        trackStudent.setDepartment_name(studentDto.getDepartment_name());
+
+        Student savedStudent =  studentRepository.save(trackStudent);
+        return modelMapper.map(savedStudent, StudentDto.class);
+
+    }
+
 }

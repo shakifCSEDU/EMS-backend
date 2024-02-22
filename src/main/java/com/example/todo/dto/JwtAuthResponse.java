@@ -15,13 +15,16 @@ public class JwtAuthResponse {
     private Long teacher_id;
     private String designation;
     private String faculty_name;
+    private Boolean status;
+
+
 
     public JwtAuthResponse() {
     }
 
-    public JwtAuthResponse(String accessToken, String tokenType, String role, String name, Long id,
-                           Long student_id, String batch_no, String department_name,
-                           Long teacher_id, String designation, String faculty_name) {
+    public JwtAuthResponse(String accessToken, String tokenType, String role, String name, Long id, Long student_id,
+                           String batch_no, String department_name, Long teacher_id,
+                           String designation, String faculty_name, Boolean status) {
         this.accessToken = accessToken;
         this.tokenType = tokenType;
         this.role = role;
@@ -33,6 +36,7 @@ public class JwtAuthResponse {
         this.teacher_id = teacher_id;
         this.designation = designation;
         this.faculty_name = faculty_name;
+        this.status = status;
     }
 
     public Long getStudent_id() {
@@ -121,5 +125,13 @@ public class JwtAuthResponse {
 
     public void setTokenType(String tokenType) {
         this.tokenType = tokenType;
+    }
+
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
     }
 }

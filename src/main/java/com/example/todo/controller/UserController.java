@@ -131,5 +131,24 @@ public class UserController {
        return ResponseEntity.ok(text);
 
     }
+
+    // Student update their profile
+    @PreAuthorize("hasRole('STUDENT')")
+    @PostMapping("/update-student")
+    public ResponseEntity<StudentDto> updateStudent(@RequestBody StudentDto studentDto){
+       // String text = userService.deActiveUser(user_id);
+        //return ResponseEntity.ok(text);
+       StudentDto savedStudentDto =  studentService.updateStudent(studentDto);
+       return ResponseEntity.ok(savedStudentDto);
+    }
+
+    // Teacher update their profile
+    @PreAuthorize("hasRole('TEACHER')")
+    @PostMapping("/update-teacher")
+    public ResponseEntity<TeacherDto> updateTeacher(@RequestBody TeacherDto teacherDto){
+        TeacherDto teacherDto1 =  teacherService.updateTeacher(teacherDto);
+        return ResponseEntity.ok(teacherDto1);
+    }
+
 }
 

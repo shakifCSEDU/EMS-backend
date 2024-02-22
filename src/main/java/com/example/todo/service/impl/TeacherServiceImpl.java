@@ -15,7 +15,9 @@ import com.example.todo.repository.UserRepository;
 import com.example.todo.service.TeacherService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +38,11 @@ public class TeacherServiceImpl implements TeacherService {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+
 
     @Override
     public TeacherDto addTeacher(TeacherDto teacherDto) {
@@ -71,8 +78,31 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public TeacherDto updateTeacher(TeacherDto teacherDto, Long id) {
-        return null;
+    public TeacherDto updateTeacher(TeacherDto teacherDto) {
+        List<Teacher>teachers = teacherRepository.findAll();
+
+        Teacher trackTeacher = new Teacher();
+
+
+        for(Teacher teacher : teachers){
+            if(teacher.getTeacher_id() == teacherDto.getTeacher_id()){
+                trackTeacher = teacher;
+                break;
+            }
+        }
+
+        trackTeacher.getUser().setEmail(teacherDto.getUser().getEmail());
+
+        // check the password field is empty or not
+        if(StringUtils.hasLength(teacherDto.getUser().getPassword()))
+            trackTeacher.getUser().setPassword(passwordEncoder.encode(teacherDto.getUser().getPassword()));
+
+
+        trackTeacher.getUser().setUsername(teacherDto.getUser().getUsername());
+        trackTeacher.setFaculty_name(teacherDto.getFaculty_name());
+
+        Teacher savedTeacher =  teacherRepository.save(trackTeacher);
+        return modelMapper.map(savedTeacher, TeacherDto.class);
     }
 
     @Override

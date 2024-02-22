@@ -8,7 +8,6 @@ import jakarta.persistence.OneToOne;
 public class StudentDto {
     private Long student_id;
 
-
     private String department_name;
     private String batch_no;
 
