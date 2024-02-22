@@ -86,25 +86,28 @@ public class UserController {
     }
 
 
-    // Teacher can delete Request
+    // Teacher can cancel Request
     @PreAuthorize("hasAnyRole('TEACHER')")
-    @PostMapping("/teachers/{id}/delete")
-    public ResponseEntity<String>deleteStudent(@PathVariable("id") Long teacher_id, @RequestBody TeacherStudentDto teacherStudentDto){
-
+    @PostMapping("/teacher/cancel_request")
+    public ResponseEntity<String>deleteStudent(@RequestBody TeacherStudentDto teacherStudentDto){
         teacherService.deletePendingOrAccepted(teacherStudentDto);
-        return ResponseEntity.ok("Remove Successfully!");
+        return ResponseEntity.ok("Cancel Successfully!");
     }
-
 
     // Teacher can accept Request
     @PreAuthorize("hasAnyRole('TEACHER')")
-    @GetMapping("/teachers/{id}/accept")
-    public ResponseEntity<String>acceptStudent(@PathVariable("id") Long teacher_id,@RequestBody TeacherStudentDto teacherStudentDto){
+    @PostMapping ("/teacher/accept")
+    public ResponseEntity<String>acceptStudent(@RequestBody TeacherStudentDto teacherStudentDto){
         teacherService.acceptPendingRequest(teacherStudentDto);
         return ResponseEntity.ok("Teacher Accept the request.");
-
     }
 
-
-
+    // Teacher Remove student
+    @PreAuthorize("hasAnyRole('TEACHER')")
+    @PostMapping("/teacher/remove")
+    public ResponseEntity<String>removeStudent(@RequestBody TeacherStudentDto teacherStudentDto){
+        teacherService.deletePendingOrAccepted(teacherStudentDto);
+        return ResponseEntity.ok("Remove Successfully!");
+    }
 }
+
