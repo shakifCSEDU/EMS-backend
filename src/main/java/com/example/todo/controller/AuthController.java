@@ -18,6 +18,7 @@ public class AuthController {
 
     public AuthController(AuthService authService) {
         this.authService = authService;
+
     }
     // build Register REST API
 

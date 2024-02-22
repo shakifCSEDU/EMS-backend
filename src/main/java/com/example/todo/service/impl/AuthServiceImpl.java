@@ -15,6 +15,7 @@ import com.example.todo.repository.TeacherRepository;
 import com.example.todo.repository.UserRepository;
 import com.example.todo.security.JwtTokenProvider;
 import com.example.todo.service.AuthService;
+import jakarta.annotation.PostConstruct;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -178,4 +179,31 @@ public class AuthServiceImpl implements AuthService {
         jwtAuthResponse.setName(name);
         return jwtAuthResponse;
     }
+
+//    @PostConstruct
+//    @Override
+//    public void createAdminAccount(){
+//        Role role =  roleRepository.findByName("ROLE_ADMIN");
+//        System.out.println(role.getName().isEmpty());
+//
+//        if(role == null){
+//
+//            User user = new User();
+//            user.setUsername("admin");
+//            user.setEmail("admin@gmail.com");
+//            user.setPhone("0187843782");
+//
+//            user.setPassword(passwordEncoder.encode("admin"));
+//
+//            //Role userRole =  roleRepository.findByName("ROLE_USER");
+//            Role adminRole = new Role();
+//            adminRole.setName("ROLE_ADMIN");
+//            adminRole.setDescription("Admin account");
+//            Role savedRole =  roleRepository.save(adminRole);
+//            user.setRole(savedRole);
+//            userRepository.save(user);
+//        }
+//    }
+
+
 }

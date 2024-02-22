@@ -10,5 +10,5 @@ public interface AuthService {
     String registerTeacher(TeacherDto teacherDto);
 
     JwtAuthResponse login(LoginDto loginDto);
-
+    //public void createAdminAccount();
 }

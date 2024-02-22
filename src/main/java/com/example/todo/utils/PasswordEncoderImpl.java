@@ -10,9 +10,9 @@ public class PasswordEncoderImpl {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
         //System.out.println(passwordEncoder.encode("shakif"));
-        //System.out.println(passwordEncoder.encode("admin"));
-        Date currentDate = new Date();
-        Date expireDate = new Date(currentDate.getTime());
+        System.out.println(passwordEncoder.encode("admin"));
+        //Date currentDate = new Date();
+        //Date expireDate = new Date(currentDate.getTime());
 
 
     }
