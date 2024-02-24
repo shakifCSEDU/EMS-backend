@@ -1,13 +1,11 @@
 package com.example.todo.service;
 
-import com.example.todo.dto.StudentDto;
-import com.example.todo.dto.TeacherDto;
-import com.example.todo.dto.TeacherStudentDto;
+import com.example.todo.dto.*;
 
 import java.util.List;
 
 public interface TeacherService {
-
+    AuthTeacherResponse getAllTeacherInfo(String token);
     TeacherDto addTeacher(TeacherDto teacherDto);
     TeacherDto getTeacher(Long id);
     List<TeacherDto> getAllTeachers();

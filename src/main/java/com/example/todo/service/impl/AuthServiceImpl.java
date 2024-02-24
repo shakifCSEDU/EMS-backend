@@ -136,18 +136,20 @@ public class AuthServiceImpl implements AuthService {
                 loginDto.getUsernameOrEmail());
 
         String role = null;
-        Long id = null;
-        String name = null;
-        Boolean status = null;
+        //Long id = null;
+        //String name = null;
+        //Boolean status = null;
 
         if(userOptional.isPresent()){
             User loggedInUser = userOptional.get();
             role = loggedInUser.getRole().getName();
-            name = loggedInUser.getUsername();
-            id = loggedInUser.getId();
-            status = loggedInUser.getStatus();
+            //name = loggedInUser.getUsername();
+           // id = loggedInUser.getId();
+           // status = loggedInUser.getStatus();
         }
         JwtAuthResponse jwtAuthResponse = new JwtAuthResponse();
+
+        /*
 
         if(role.equals("ROLE_STUDENT")){
             List<Student>students = studentRepository.findAll();
@@ -175,12 +177,13 @@ public class AuthServiceImpl implements AuthService {
             }
         }
 
+         */
 
         jwtAuthResponse.setRole(role);
         jwtAuthResponse.setAccessToken(token);
-        jwtAuthResponse.setId(id);
-        jwtAuthResponse.setName(name);
-        jwtAuthResponse.setStatus(status);
+        //jwtAuthResponse.setId(id);
+        //jwtAuthResponse.setName(name);
+        //jwtAuthResponse.setStatus(status);
         return jwtAuthResponse;
     }
 

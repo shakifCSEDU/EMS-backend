@@ -1,8 +1,6 @@
 package com.example.todo.service.impl;
 
-import com.example.todo.dto.StudentDto;
-import com.example.todo.dto.TeacherDto;
-import com.example.todo.dto.TeacherStudentDto;
+import com.example.todo.dto.*;
 import com.example.todo.entity.Student;
 import com.example.todo.entity.Teacher;
 import com.example.todo.entity.TeacherStudent;
@@ -12,6 +10,7 @@ import com.example.todo.repository.StudentRepository;
 import com.example.todo.repository.TeacherRepository;
 import com.example.todo.repository.TeacherStudentRepository;
 import com.example.todo.repository.UserRepository;
+import com.example.todo.security.JwtTokenProvider;
 import com.example.todo.service.TeacherService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +20,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -35,6 +35,9 @@ public class TeacherServiceImpl implements TeacherService {
     private TeacherStudentRepository teacherStudentRepository;
     @Autowired
     private StudentRepository studentRepository;
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
+
 
     @Autowired
     private ModelMapper modelMapper;
@@ -43,6 +46,24 @@ public class TeacherServiceImpl implements TeacherService {
     private PasswordEncoder passwordEncoder;
 
 
+    @Override
+    public AuthTeacherResponse getAllTeacherInfo(String token) {
+        String userName =  jwtTokenProvider.getUsername(token);
+        AuthTeacherResponse authTeacherResponse = new AuthTeacherResponse();
+
+        if(!userName.isEmpty()){
+            Optional<User> user =  userRepository.findByUsername(userName);
+            authTeacherResponse.setId(user.get().getId());
+            authTeacherResponse.setName(userName);
+            authTeacherResponse.setStatus(user.get().getStatus());
+            // now query the Teacher Table
+            Teacher teacher = teacherRepository.findByUserId(user.get().getId());
+            authTeacherResponse.setTeacher_id(teacher.getTeacher_id());
+            authTeacherResponse.setDesignation(teacher.getDesignation());
+            authTeacherResponse.setFaculty_name(teacher.getFaculty_name());
+        }
+        return authTeacherResponse;
+    }
 
     @Override
     public TeacherDto addTeacher(TeacherDto teacherDto) {

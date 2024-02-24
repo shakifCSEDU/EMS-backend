@@ -1,5 +1,6 @@
 package com.example.todo.service.impl;
 
+import com.example.todo.dto.AuthStudentResponse;
 import com.example.todo.dto.StudentDto;
 import com.example.todo.dto.TeacherStudentDto;
 import com.example.todo.dto.TodoDto;
@@ -9,6 +10,7 @@ import com.example.todo.repository.StudentRepository;
 import com.example.todo.repository.TeacherRepository;
 import com.example.todo.repository.TeacherStudentRepository;
 import com.example.todo.repository.UserRepository;
+import com.example.todo.security.JwtTokenProvider;
 import com.example.todo.service.StudentService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +36,28 @@ public class StudentServiceImpl implements StudentService {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private ModelMapper modelMapper;
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
+
+
+    @Override
+    public AuthStudentResponse getAllStudentInfo(String token) {
+        String userName =  jwtTokenProvider.getUsername(token);
+        AuthStudentResponse authStudentResponse = new AuthStudentResponse();
+
+        if(!userName.isEmpty()){
+            Optional<User> user =  userRepository.findByUsername(userName);
+            authStudentResponse.setId(user.get().getId());
+            authStudentResponse.setName(userName);
+            authStudentResponse.setStatus(user.get().getStatus());
+            // now query the student Table
+            Student student = studentRepository.findByUserId(user.get().getId());
+            authStudentResponse.setStudent_id(student.getStudent_id());
+            authStudentResponse.setDepartment_name(student.getDepartment_name());
+            authStudentResponse.setBatch_no(student.getBatch_no());
+        }
+        return authStudentResponse;
+    }
 
     @Override
     public StudentDto addStudent(StudentDto studentDto) {
