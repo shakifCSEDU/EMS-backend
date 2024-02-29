@@ -1,9 +1,6 @@
 package com.example.todo.controller;
 
-import com.example.todo.dto.StudentDto;
-import com.example.todo.dto.TeacherDto;
-import com.example.todo.dto.TeacherStudentDto;
-import com.example.todo.dto.TodoDto;
+import com.example.todo.dto.*;
 import com.example.todo.service.StudentService;
 import com.example.todo.service.TeacherService;
 import com.example.todo.service.UserService;
@@ -24,25 +21,20 @@ public class UserController {
     private StudentService studentService;
     @Autowired
     private TeacherService teacherService;
-
     @Autowired
     private UserService userService;
 
-    // Add Student info to the Student Table
+
+
+    // grant user Teacher Role
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/add-student")
-    public ResponseEntity<StudentDto> addStudent(@RequestBody StudentDto studentDto){
-        StudentDto savedStudent = studentService.addStudent(studentDto);
-        return new ResponseEntity<>(savedStudent, HttpStatus.CREATED);
+    @PutMapping("user-to-role/{id}")
+    public ResponseEntity<UserDto>grantUserToTeacher(@RequestBody UserDto userDto, @PathVariable("id") Long id){
+        UserDto savedUserDto = userService.grantUserToRole(userDto,id);
+        return ResponseEntity.ok(savedUserDto);
     }
 
-    // Add Teacher info to the Teacher table
-    @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/add-teacher")
-    public ResponseEntity<TeacherDto> addTeacher(@RequestBody TeacherDto teacherDto){
-        TeacherDto savedTeacher = teacherService.addTeacher(teacherDto);
-        return new ResponseEntity<>(savedTeacher,HttpStatus.CREATED);
-    }
+
 
     @PreAuthorize("hasAnyRole('ADMIN','STUDENT')")
     @GetMapping("/students")
@@ -58,26 +50,6 @@ public class UserController {
         return ResponseEntity.ok(teacherDtos);
     }
 
-
-    // student sent a request to any teacher
-    @PreAuthorize("hasAnyRole('STUDENT')")
-    @PostMapping("/student/send-request")
-    public ResponseEntity<TeacherStudentDto>sendTeacherRequest(@RequestBody TeacherStudentDto teacherStudentDto){
-        TeacherStudentDto savedTeacherStudentDto = studentService.sendRequest(teacherStudentDto);
-
-        return ResponseEntity.ok(teacherStudentDto);
-    }
-
-
-
-    // check student the request status that
-    @PreAuthorize("hasAnyRole('STUDENT')")
-    @GetMapping("/student/check-status/{id}")
-    public ResponseEntity<String>checkStudentStatus(@PathVariable("id") Long student_id){
-        String request_status = studentService.checkStatus(student_id);
-
-        return ResponseEntity.ok(request_status);
-    }
 
 
     // fetch all students based on teacher_id

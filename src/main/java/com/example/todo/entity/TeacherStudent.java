@@ -16,7 +16,7 @@ public class TeacherStudent {
     @JoinColumn(name = "student_id",referencedColumnName = "student_id")
     private Student student;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "teacher_id")
     private Teacher teacher;
 

@@ -10,7 +10,6 @@ public interface StudentService {
 
     AuthStudentResponse getAllStudentInfo(String token);
 
-    StudentDto addStudent(StudentDto studentDto);
     StudentDto getStudent(Long id);
     List<StudentDto> getAllStudents();
     StudentDto updateStudent(StudentDto studentDto);

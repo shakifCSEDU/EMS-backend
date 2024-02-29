@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -60,29 +61,6 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public StudentDto addStudent(StudentDto studentDto) {
-        // convert StudentTodo into Todo Jpa entity
-        Student student = modelMapper.map(studentDto,Student.class);
-
-        // extract Userinfo from Student
-        User user = studentDto.getUser();
-        User savedUser =  userRepository.save(user);
-
-        // extract Teacherinfo from Student
-        // Teacher teacher = studentDto.getTeacher();
-        //Teacher savedTeacher = teacherRepository.save(teacher);
-
-        student.setUser(savedUser);
-        student.setTeacher(null);
-
-        Student savedStudent = studentRepository.save(student);
-
-        // convert saved Todo Jpa entity object into TodoDto object
-        StudentDto savedStudentDto = modelMapper.map(savedStudent,StudentDto.class);
-        return savedStudentDto;
-    }
-
-    @Override
     public StudentDto getStudent(Long id) {
         Student student =  studentRepository.findById(id).orElseThrow(
                 ()->new ResourceNotFoundException("Student not found with id : "+id));
@@ -119,19 +97,33 @@ public class StudentServiceImpl implements StudentService {
         TeacherStudent teacherStudent = new TeacherStudent();
 
         Long teacher_id  = teacherStudentDto.getTeacher().getTeacher_id();
-
-        Optional<Teacher> teacher = teacherRepository.findById(teacher_id);
-
-        teacherStudent.setTeacher(teacher.get());
-
         Long student_id = teacherStudentDto.getStudent().getStudent_id();
 
-        Optional<Student> student =   studentRepository.findById(student_id);
 
-        teacherStudent.setStudent(student.get());
+
+        Teacher teacher = teacherRepository.findById(teacher_id).orElseThrow(
+                ()->new ResourceNotFoundException("Teacher not found with id : "+teacher_id)
+        );
+
+        Student student =   studentRepository.findById(student_id).orElseThrow(
+                ()->new ResourceNotFoundException("Student not found with id : "+student_id)
+        );
+
+        teacherStudent.setTeacher(teacher);
+
+
+        teacherStudent.setStudent(student);
         teacherStudent.setRequest_status("pending");
-
         TeacherStudent savedTeacherStudent = teacherStudentRepository.save(teacherStudent);
+
+        student.setTeacherStudent(savedTeacherStudent);
+        studentRepository.save(student);
+
+        List<TeacherStudent>list = new ArrayList<>();
+        list.add(teacherStudent);
+        teacher.setTeacherStudents(list);
+        teacherRepository.save(teacher);
+
         return modelMapper.map(savedTeacherStudent,TeacherStudentDto.class);
     }
 
@@ -155,7 +147,7 @@ public class StudentServiceImpl implements StudentService {
         Student trackStudent = new Student();
 
         for(Student student : students){
-            if(student.getStudent_id() == studentDto.getStudent_id()){
+            if(student.getStudent_id().equals(studentDto.getStudent_id())){
                 trackStudent = student;
                 break;
             }

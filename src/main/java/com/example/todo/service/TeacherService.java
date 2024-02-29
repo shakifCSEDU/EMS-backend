@@ -6,7 +6,6 @@ import java.util.List;
 
 public interface TeacherService {
     AuthTeacherResponse getAllTeacherInfo(String token);
-    TeacherDto addTeacher(TeacherDto teacherDto);
     TeacherDto getTeacher(Long id);
     List<TeacherDto> getAllTeachers();
     TeacherDto updateTeacher(TeacherDto teacherDto);

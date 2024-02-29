@@ -1,14 +1,16 @@
 package com.example.todo.service;
 
-import com.example.todo.dto.JwtAuthResponse;
-import com.example.todo.dto.LoginDto;
-import com.example.todo.dto.StudentDto;
-import com.example.todo.dto.TeacherDto;
+import com.example.todo.dto.*;
+
+import java.util.List;
 
 public interface AuthService {
-    String registerStudent(StudentDto studentDto);
-    String registerTeacher(TeacherDto teacherDto);
+    StudentDto registerStudent(StudentDto studentDto);
+    TeacherDto registerTeacher(TeacherDto teacherDto);
+    RegisterDto registerUser(RegisterDto registerDto);
+    List<UserDto>getAllUnAllotedUser();
 
     JwtAuthResponse login(LoginDto loginDto);
     //public void createAdminAccount();
+
 }

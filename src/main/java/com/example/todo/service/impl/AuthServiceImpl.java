@@ -1,9 +1,6 @@
 package com.example.todo.service.impl;
 
-import com.example.todo.dto.JwtAuthResponse;
-import com.example.todo.dto.LoginDto;
-import com.example.todo.dto.StudentDto;
-import com.example.todo.dto.TeacherDto;
+import com.example.todo.dto.*;
 import com.example.todo.entity.Role;
 import com.example.todo.entity.Student;
 import com.example.todo.entity.Teacher;
@@ -26,6 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,9 +51,50 @@ public class AuthServiceImpl implements AuthService {
         this.jwtTokenProvider = jwtTokenProvider;
         this.modelMapper = modelMapper;
     }
+    @Override
+    public RegisterDto registerUser(RegisterDto registerDto) {
+        // check email is already exists in database
+        if(userRepository.existsByEmail(registerDto.getEmail())){
+            throw new TodoAPIException(HttpStatus.BAD_REQUEST,"Email is already exists!");
+        }
+        User user = new User();
+        user.setUsername(registerDto.getUsername());
+        user.setEmail(registerDto.getEmail());
+        user.setPhone(registerDto.getPhone());
+
+        user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
+
+        Role userRole = registerDto.getRole();
+
+        user.setRole(userRole);
+        User savedUser =  userRepository.save(user);
+
+        return modelMapper.map(savedUser,RegisterDto.class);
+
+    }
+
+    public List<UserDto> getAllUnAllotedUser() {
+        List<User>users = userRepository.findAll();
+
+        // track those users whose are not alloted any role
+        List<UserDto>unallotedRole = new ArrayList<>();
+
+        for(User user : users){
+            if(user.getRole() == null){
+                UserDto temp = new UserDto();
+                temp.setId(user.getId());
+                temp.setEmail(user.getEmail());
+                temp.setStatus(user.getStatus());
+                temp.setUsername(user.getUsername());
+                unallotedRole.add(temp);
+            }
+        }
+        return unallotedRole;
+    }
+
 
     @Override
-    public String registerStudent(StudentDto studentDto) {
+    public StudentDto registerStudent(StudentDto studentDto) {
 
         // check email is already exists in database
         if(userRepository.existsByEmail(studentDto.getUser().getEmail())){
@@ -64,16 +103,12 @@ public class AuthServiceImpl implements AuthService {
         User user = new User();
         user.setUsername(studentDto.getUser().getUsername());
         user.setEmail(studentDto.getUser().getEmail());
-
-        if(!studentDto.getUser().getPhone().isEmpty())
-            user.setPhone(studentDto.getUser().getPhone());
+        user.setPhone(studentDto.getUser().getPhone());
 
         user.setPassword(passwordEncoder.encode(studentDto.getUser().getPassword()));
 
-        //Role userRole =  roleRepository.findByName("ROLE_USER");
         Role userRole = studentDto.getUser().getRole();
         Role savedRole =  roleRepository.save(userRole);
-
         user.setRole(savedRole);
         User savedUser =  userRepository.save(user);
 
@@ -85,12 +120,11 @@ public class AuthServiceImpl implements AuthService {
         student.setUser(savedUser);
         Student savedStudent = studentRepository.save(student);
         StudentDto savedStudentDto = modelMapper.map(savedStudent,StudentDto.class);
-
-        return "Student register successfull!";
+        return savedStudentDto;
     }
 
     @Override
-    public String registerTeacher(TeacherDto teacherDto) {
+    public TeacherDto registerTeacher(TeacherDto teacherDto) {
         // check email is already exists in database
         if(userRepository.existsByEmail(teacherDto.getUser().getEmail())){
             throw new TodoAPIException(HttpStatus.BAD_REQUEST,"Email is already exists!");
@@ -99,8 +133,7 @@ public class AuthServiceImpl implements AuthService {
         user.setUsername(teacherDto.getUser().getUsername());
         user.setEmail(teacherDto.getUser().getEmail());
 
-        if(!teacherDto.getUser().getPhone().isEmpty())
-            user.setPhone(teacherDto.getUser().getPhone());
+        user.setPhone(teacherDto.getUser().getPhone());
 
         user.setPassword(passwordEncoder.encode(teacherDto.getUser().getPassword()));
 
@@ -119,8 +152,10 @@ public class AuthServiceImpl implements AuthService {
 
         teacher.setUser(savedUser);
         Teacher savedTeacher =  teacherRepository.save(teacher);
-        return "Teacher Registration successfull!";
+        return modelMapper.map(savedTeacher,TeacherDto.class);
     }
+
+
 
     @Override
     public JwtAuthResponse login(LoginDto loginDto) {
@@ -136,54 +171,17 @@ public class AuthServiceImpl implements AuthService {
                 loginDto.getUsernameOrEmail());
 
         String role = null;
-        //Long id = null;
-        //String name = null;
-        //Boolean status = null;
 
         if(userOptional.isPresent()){
             User loggedInUser = userOptional.get();
             role = loggedInUser.getRole().getName();
-            //name = loggedInUser.getUsername();
-           // id = loggedInUser.getId();
-           // status = loggedInUser.getStatus();
         }
         JwtAuthResponse jwtAuthResponse = new JwtAuthResponse();
 
-        /*
 
-        if(role.equals("ROLE_STUDENT")){
-            List<Student>students = studentRepository.findAll();
-
-            for(Student student : students){
-                User newUser = student.getUser();
-
-               if(newUser.getId().equals(id)){
-                   System.out.println(newUser.getId()+" "+id);
-                   jwtAuthResponse.setStudent_id(student.getStudent_id());
-                    jwtAuthResponse.setDepartment_name(student.getDepartment_name());
-                    jwtAuthResponse.setBatch_no(student.getBatch_no());
-                }
-
-            }
-        }
-        else if(role.equals("ROLE_TEACHER")){
-            List<Teacher>teachers = teacherRepository.findAll();
-            for(Teacher teacher : teachers){
-                if(teacher.getUser().getId().equals(id)){
-                    jwtAuthResponse.setTeacher_id(teacher.getTeacher_id());
-                    jwtAuthResponse.setFaculty_name(teacher.getFaculty_name());
-                    jwtAuthResponse.setDesignation(teacher.getDesignation());
-                }
-            }
-        }
-
-         */
 
         jwtAuthResponse.setRole(role);
         jwtAuthResponse.setAccessToken(token);
-        //jwtAuthResponse.setId(id);
-        //jwtAuthResponse.setName(name);
-        //jwtAuthResponse.setStatus(status);
         return jwtAuthResponse;
     }
 

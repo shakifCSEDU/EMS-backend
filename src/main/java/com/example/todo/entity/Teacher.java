@@ -17,7 +17,7 @@ public class Teacher {
     @JoinColumn(name = "user_id",referencedColumnName = "id")
     private User user;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "teach_stud_id")
     private List<TeacherStudent>teacherStudents;
 

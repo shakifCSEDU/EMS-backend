@@ -37,11 +37,8 @@ public class TeacherServiceImpl implements TeacherService {
     private StudentRepository studentRepository;
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
-
-
     @Autowired
     private ModelMapper modelMapper;
-
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -65,22 +62,6 @@ public class TeacherServiceImpl implements TeacherService {
         return authTeacherResponse;
     }
 
-    @Override
-    public TeacherDto addTeacher(TeacherDto teacherDto) {
-        // convert TeacherDto into Teacher Jpa entity
-        Teacher teacher = modelMapper.map(teacherDto,Teacher.class);
-
-        User user = teacherDto.getUser();
-        User savedUser =  userRepository.save(user);
-
-        teacher.setUser(savedUser);
-
-        Teacher savedTeacher = teacherRepository.save(teacher);
-
-        TeacherDto savedTeacherDto = modelMapper.
-                map(savedTeacher,TeacherDto.class);
-        return savedTeacherDto;
-    }
 
     @Override
     public TeacherDto getTeacher(Long id) {
